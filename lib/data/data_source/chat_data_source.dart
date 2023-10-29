@@ -234,7 +234,7 @@ class ChatFirebaseDataSource implements IChatDataSource {
       required String senderUsername,
       required MessageReply? messageReply}) async {
     final message = Message(
-      senderId: auth.currentUser!.uid,
+      senderUid: auth.currentUser!.uid,
       contactUid: contactUid,
       text: text,
       type: messageType,

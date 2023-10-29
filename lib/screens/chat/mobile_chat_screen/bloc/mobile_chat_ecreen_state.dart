@@ -13,8 +13,8 @@ class MobileChatScreenError extends MobileChatScreenState {
 
 class MobileChatScreenSuccess extends MobileChatScreenState {
   final Stream<UserModel> contactUserModelStream;
-    final UserModel contactUserModel;
-  MobileChatScreenSuccess({required this.contactUserModel,
+    // final UserModel contactUserModel;
+  MobileChatScreenSuccess({
     required this.contactUserModelStream,
   });
 }

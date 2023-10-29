@@ -16,11 +16,12 @@ abstract class IAuthRepository {
   Future<bool> isConnectToFirebase();
   Future signInWithPhone(String phoneNumber);
   Future verifyOtp(String verificationId, String userOTP);
-  Future<void> saveUserDataToFirebase(String name, File? profilePic);
+  Future<UserModel> saveUserDataToFirebase(String name, File? profilePic);
   Future<UserModel?> getCurrentUserData();
   // Future<UserModel> getContactUserData(String contactUId);
   Future<void> setUserStatus(bool isOnline);
-   Future<void> signOut();
+  Future<void> signOut();
+  Future<String> changeProfilePic(File? profilePic);
 }
 
 class AuthRepository implements IAuthRepository {
@@ -49,7 +50,8 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<void> saveUserDataToFirebase(String name, File? profilePic) async {
+  Future<UserModel> saveUserDataToFirebase(
+      String name, File? profilePic) async {
     return await dataSource.saveUserDataToFirebase(name, profilePic);
   }
 
@@ -62,10 +64,15 @@ class AuthRepository implements IAuthRepository {
   Future<void> setUserStatus(bool isOnline) async {
     await dataSource.setUserStatus(isOnline);
   }
-  
+
   @override
-  Future<void> signOut() async{
+  Future<void> signOut() async {
     await dataSource.signOut();
+  }
+
+  @override
+  Future<String> changeProfilePic(File? profilePic) async {
+   return await dataSource.changeProfilePic(profilePic);
   }
 
   // @override

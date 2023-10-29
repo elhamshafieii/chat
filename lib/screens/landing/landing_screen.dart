@@ -93,7 +93,7 @@ class LandingScreen extends StatelessWidget {
               ),
             );
           } else {
-            throw Exception();
+            throw Exception('This state is not supported.');
           }
         },
       ),

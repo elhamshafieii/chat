@@ -8,12 +8,13 @@ part 'otp_state.dart';
 
 class OtpBloc extends Bloc<OtpEvent, OtpState> {
   final IAuthRepository authRepository;
+
   OtpBloc({required this.authRepository}) : super(OtpInitial()) {
     on<OtpEvent>((event, emit) async {
       if (event is OtpCodeFilled) {
         try {
           emit(OtpLoading());
-         final UserModel userData =  await authRepository.verifyOtp(
+          final UserModel userData = await authRepository.verifyOtp(
             event.verificationCode,
             event.userOtp,
           );

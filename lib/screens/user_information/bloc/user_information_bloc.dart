@@ -18,8 +18,9 @@ class UserInformationBloc
       if (event is UserInformationOkButtomClicked) {
         try {
           emit(UserInformationLoading());
-          authRepository.saveUserDataToFirebase(
+          final userModel = await authRepository.saveUserDataToFirebase(
               event.userName, event.profilePic);
+          emit(UserInformationSuccess(userModel: userModel));
         } on FirebaseAuthException catch (e) {
           emit(UserInformationError(error: e.message.toString()));
         }

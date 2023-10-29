@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat/common/utils/utils.dart';
 import 'package:chat/models/user_model.dart';
 import 'package:chat/screens/setting/chats.dart';
-import 'package:chat/screens/setting/profile_screen.dart';
+import 'package:chat/screens/setting/profile_screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatelessWidget {

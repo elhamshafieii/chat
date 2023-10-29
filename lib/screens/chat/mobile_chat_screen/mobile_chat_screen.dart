@@ -61,103 +61,123 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
         }),
       ],
       child: Scaffold(
-        appBar: AppBar(
-          titleSpacing: 0,
-          centerTitle: false,
-          title: BlocProvider<MobileChatScreenBloc>(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: BlocProvider<MobileChatScreenBloc>(
             create: (BuildContext context) {
               final mobileChatScreenBloc = context.read<MobileChatScreenBloc>();
               mobileChatScreenBloc.add(MobileChatScreenStarted());
               return mobileChatScreenBloc;
             },
             child: BlocBuilder<MobileChatScreenBloc, MobileChatScreenState>(
-                builder: (context, state) {
-              if (state is MobileChatScreenLoading) {
-                return const CupertinoActivityIndicator();
-              } else if (state is MobileChatScreenError) {
-                return Container();
-              } else if (state is MobileChatScreenSuccess) {
-                return StreamBuilder(
-                  stream: state.contactUserModelStream,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<UserModel> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CupertinoActivityIndicator();
-                    }
-                    final contactModel = snapshot.data;
-                    contactName = contactModel!.name;
-                    return Row(
-                      children: [
-                        contactModel.profilePic != ''
-                            ? CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                backgroundImage: CachedNetworkImageProvider(
-                                    contactModel.profilePic),
-                                radius: 20,
-                              )
-                            : const CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                backgroundImage: AssetImage(
-                                    'assets/images/no_profile_pic.png'),
-                                radius: 20,
+              builder: (context, state) {
+                if (state is MobileChatScreenLoading) {
+                  return const CupertinoActivityIndicator();
+                } else if (state is MobileChatScreenError) {
+                  return Container();
+                } else if (state is MobileChatScreenSuccess) {
+                  UserModel? contactModel;
+                  return AppBar(
+                    titleSpacing: 0,
+                    centerTitle: false,
+                    title: StreamBuilder(
+                      stream: state.contactUserModelStream,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<UserModel> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CupertinoActivityIndicator();
+                        }
+                        contactModel = snapshot.data!;
+                        contactName = contactModel!.name;
+                        return Row(
+                          children: [
+                            contactModel!.profilePic != ''
+                                ? CircleAvatar(
+                                    backgroundColor: Colors.grey,
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        contactModel!.profilePic),
+                                    radius: 20,
+                                  )
+                                : const CircleAvatar(
+                                    backgroundColor: Colors.grey,
+                                    backgroundImage: AssetImage(
+                                        'assets/images/no_profile_pic.png'),
+                                    radius: 20,
+                                  ),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(builder: ((context) {
+                                  return ContactDetailScreen(
+                                      contactUserModel: contactModel!);
+                                })));
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    contactModel!.name,
+                                    style: themeData.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: themeData
+                                                .appBarTheme.foregroundColor),
+                                  ),
+                                  Text(
+                                    contactModel!.isOnline
+                                        ? 'online'
+                                        : 'offline',
+                                    style: themeData.textTheme.bodySmall!
+                                        .copyWith(
+                                            color: themeData
+                                                .appBarTheme.foregroundColor),
+                                  )
+                                ],
                               ),
-                        const SizedBox(
-                          width: 12,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          if (contactModel != null) {
+                            // Navigator.of(context)
+                            //     .push(MaterialPageRoute(builder: (context) {
+                            //   return CallPickUpScreen(
+                            //     userModel: contactModel!,
+                            //     contactUserModel: widget.user,
+                            //   );
+                            // }));
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.video_call,
                         ),
-                        GestureDetector(
-                          onTap: () async {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: ((context) {
-                              return ContactDetailScreen(
-                                  currentUserModelData: state.contactUserModel);
-                            })));
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                contactModel.name,
-                                style: themeData.textTheme.bodySmall!.copyWith(
-                                    color:
-                                        themeData.appBarTheme.foregroundColor),
-                              ),
-                              Text(
-                                contactModel.isOnline ? 'online' : 'offline',
-                                style: themeData.textTheme.bodySmall!.copyWith(
-                                    color:
-                                        themeData.appBarTheme.foregroundColor),
-                              )
-                            ],
-                          ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.call,
                         ),
-                      ],
-                    );
-                  },
-                );
-              } else {
-                throw Exception('state is not supported');
-              }
-            }),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.more_vert),
+                      ),
+                    ],
+                  );
+                } else {
+                  throw ('state is not supported');
+                }
+              },
+            ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.video_call,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.call,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
-            ),
-          ],
         ),
         body: Container(
           decoration: BoxDecoration(

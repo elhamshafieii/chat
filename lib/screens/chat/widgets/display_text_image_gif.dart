@@ -8,8 +8,12 @@ import 'package:flutter/material.dart';
 class DisplayTextImageGIF extends StatefulWidget {
   final String message;
   final MessageEnum type;
-  const DisplayTextImageGIF(
-      {super.key, required this.message, required this.type});
+
+  const DisplayTextImageGIF({
+    super.key,
+    required this.message,
+    required this.type,
+  });
 
   @override
   State<DisplayTextImageGIF> createState() => _DisplayTextImageGIFState();

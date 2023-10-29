@@ -5,6 +5,5 @@ sealed class SelectContactEvent {}
 
 class SelectContactStarted extends SelectContactEvent {
   final Contact selectedContact;
-
   SelectContactStarted({required this.selectedContact});
 }

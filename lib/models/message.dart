@@ -1,7 +1,7 @@
 import 'package:chat/common/enums/message_enum.dart';
 
 class Message {
-  final String senderId;
+  final String senderUid;
   final String contactUid;
   final String text;
   final MessageEnum type;
@@ -13,7 +13,7 @@ class Message {
   final MessageEnum repliedMessageType;
 
   Message({
-    required this.senderId,
+    required this.senderUid,
     required this.contactUid,
     required this.text,
     required this.type,
@@ -27,8 +27,8 @@ class Message {
 
   Map<String, dynamic> toMap() {
     return {
-      'senderId': senderId,
-      'recieverid': contactUid,
+      'senderUid': senderUid,
+      'contactUid': contactUid,
       'text': text,
       'type': type.type,
       'timeSent': timeSent.millisecondsSinceEpoch,
@@ -42,7 +42,7 @@ class Message {
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
-      senderId: map['senderId'] ?? '',
+      senderUid: map['senderUid'] ?? '',
       contactUid: map['contactUid'] ?? '',
       text: map['text'] ?? '',
       type: (map['type'] as String).toEnum(),

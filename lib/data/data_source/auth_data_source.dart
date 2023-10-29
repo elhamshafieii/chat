@@ -10,11 +10,12 @@ abstract class IAuthDataSource {
   Future<bool> isConnectToFirebase();
   Future signInWithPhone(String phoneNumber);
   Future verifyOtp(String verificationId, String userOTP);
-  Future<void> saveUserDataToFirebase(String name, File? profilePic);
+  Future<UserModel> saveUserDataToFirebase(String name, File? profilePic);
   Future<UserModel?> getCurrentUserData();
   // Future<UserModel> getContactUserData(String contactUId);
   Future<void> setUserStatus(bool isOnline);
   Future<void> signOut();
+  Future<String> changeProfilePic(File? profilePic);
 }
 
 class AuthFirebaseDataSource implements IAuthDataSource {
@@ -59,13 +60,13 @@ class AuthFirebaseDataSource implements IAuthDataSource {
   }
 
   @override
-  Future<UserModel> verifyOtp(String verificationId, String userOTP) async {
-    UserModel userModel;
+  Future<UserModel?> verifyOtp(String verificationId, String userOTP) async {
+    UserModel? userModel;
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: userOTP);
     await auth.signInWithCredential(credential);
-    userModel = (await getCurrentUserData())!;
-    if (userModel.name.isEmpty) {
+    userModel = (await getCurrentUserData());
+    if (userModel == null) {
       saveUserDataToFirebase('', null);
       userModel = (await getCurrentUserData())!;
     }
@@ -73,7 +74,8 @@ class AuthFirebaseDataSource implements IAuthDataSource {
   }
 
   @override
-  Future<void> saveUserDataToFirebase(String name, File? profilePic) async {
+  Future<UserModel> saveUserDataToFirebase(
+      String name, File? profilePic) async {
     String uid = auth.currentUser!.uid;
     String photoUrl = '';
     if (profilePic != null) {
@@ -90,6 +92,7 @@ class AuthFirebaseDataSource implements IAuthDataSource {
       isOnline: true,
     );
     await fireStore.collection('users').doc(uid).set(user.toMap());
+    return user;
   }
 
   @override
@@ -109,10 +112,29 @@ class AuthFirebaseDataSource implements IAuthDataSource {
       'isOnline': isOnline,
     });
   }
-  
+
   @override
-  Future<void> signOut() async{
-     await auth.signOut();;
+  Future<void> signOut() async {
+    await auth.signOut();
+    ;
+  }
+
+  @override
+  Future<String> changeProfilePic(File? profilePic) async {
+    String uid = auth.currentUser!.uid;
+    String photoUrl = '';
+    if (profilePic != null) {
+      UploadTask uploadTask =
+          storage.ref().child('profilePic/$uid').putFile(profilePic);
+      TaskSnapshot snapshot = await uploadTask;
+      photoUrl = await snapshot.ref.getDownloadURL();
+    }
+    await fireStore
+        .collection('users')
+        .doc(uid)
+        .update({'profilePic': photoUrl});
+    ;
+    return photoUrl;
   }
 
   // @override

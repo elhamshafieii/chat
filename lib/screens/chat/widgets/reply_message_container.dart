@@ -13,6 +13,8 @@ class ReplyMessageContainer extends StatelessWidget {
     required this.username,
     required this.repliedText,
     required this.themeData,
+    required this.replyTo,
+    required this.isMeReply,
   });
 
   final MessageEnum repliedMessageType;
@@ -20,6 +22,8 @@ class ReplyMessageContainer extends StatelessWidget {
   final String username;
   final String repliedText;
   final ThemeData themeData;
+  final String replyTo;
+  final bool isMeReply;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,9 @@ class ReplyMessageContainer extends StatelessWidget {
           ),
           height: 60,
           decoration: BoxDecoration(
-            color: themeData.cardTheme.color!.shade(7),
+            color: isMeReply
+                ? themeData.cardTheme.color!.shade(7)
+                : Colors.grey.shade200,
             borderRadius: const BorderRadius.all(
               Radius.circular(
                 8,
@@ -60,7 +66,7 @@ class ReplyMessageContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      username,
+                      replyTo,
                       style: const TextStyle(
                         color: DarkThemeColors.selectedLableColor,
                       ),
@@ -91,7 +97,9 @@ class ReplyMessageContainer extends StatelessWidget {
       return Container(
         height: 60,
         decoration: BoxDecoration(
-          color: themeData.cardTheme.color!.shade(7),
+          color: isMeReply
+              ? themeData.cardTheme.color!.shade(7)
+              : Colors.grey.shade200,
           borderRadius: const BorderRadius.all(
             Radius.circular(
               8,
@@ -119,7 +127,7 @@ class ReplyMessageContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  username,
+                  replyTo,
                   style: const TextStyle(
                     color: DarkThemeColors.selectedLableColor,
                   ),
@@ -146,7 +154,9 @@ class ReplyMessageContainer extends StatelessWidget {
       return Container(
         height: 60,
         decoration: BoxDecoration(
-          color: themeData.cardTheme.color!.shade(7),
+          color: isMeReply
+              ? themeData.cardTheme.color!.shade(7)
+              : Colors.grey.shade200,
           borderRadius: const BorderRadius.all(
             Radius.circular(
               8,
@@ -174,7 +184,7 @@ class ReplyMessageContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    username,
+                    replyTo,
                     style: const TextStyle(
                       color: DarkThemeColors.selectedLableColor,
                     ),
@@ -215,7 +225,9 @@ class ReplyMessageContainer extends StatelessWidget {
         width: MediaQuery.of(context).size.width - 45,
         height: 60,
         decoration: BoxDecoration(
-          color: themeData.cardTheme.color!.shade(7),
+          color: isMeReply
+              ? themeData.cardTheme.color!.shade(7)
+              : Colors.grey.shade200,
           borderRadius: const BorderRadius.all(
             Radius.circular(
               8,
@@ -243,7 +255,7 @@ class ReplyMessageContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    username,
+                    replyTo,
                     style: const TextStyle(
                       color: DarkThemeColors.selectedLableColor,
                     ),

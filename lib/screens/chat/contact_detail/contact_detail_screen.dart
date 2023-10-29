@@ -5,11 +5,11 @@ import 'package:chat/screens/chat/contact_detail/contact_profile_photo.dart';
 import 'package:flutter/material.dart';
 
 class ContactDetailScreen extends StatelessWidget {
-  final UserModel currentUserModelData;
+  final UserModel contactUserModel;
 
   const ContactDetailScreen({
     super.key,
-    required this.currentUserModelData,
+    required this.contactUserModel,
   });
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class ContactDetailScreen extends StatelessWidget {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return ContactProfilePhoto(
-                          currentUserModelData: currentUserModelData,
+                          contactUserModel: contactUserModel,
                         );
                       }));
                     },
@@ -43,7 +43,7 @@ class ContactDetailScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 80,
                           backgroundImage: CachedNetworkImageProvider(
-                              currentUserModelData.profilePic),
+                              contactUserModel.profilePic),
                         ),
                       ],
                     ))),
@@ -51,7 +51,7 @@ class ContactDetailScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    currentUserModelData.name,
+                    contactUserModel.name,
                     style: themeData.textTheme.headlineMedium!
                         .copyWith(color: themeData.primaryColor),
                   ),
@@ -59,7 +59,7 @@ class ContactDetailScreen extends StatelessWidget {
                     height: 8,
                   ),
                   Text(
-                    currentUserModelData.phoneNumber,
+                    contactUserModel.phoneNumber,
                     style: themeData.textTheme.headlineSmall!.copyWith(
                         color: themeData.primaryColor.withOpacity(0.5)),
                   ),

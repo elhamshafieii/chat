@@ -19,10 +19,8 @@ class MobileChatScreenBloc
         try {
           final contactUserModelStream =
               chatRepository.getContactUserModelStream(contactUid);
-                 final contactUserModel =
-            await  chatRepository.getContactUserModel(contactUid);
           emit(MobileChatScreenSuccess(
-            contactUserModel: contactUserModel, contactUserModelStream: contactUserModelStream,
+          contactUserModelStream: contactUserModelStream,
           ));
         } on FirebaseException catch (e) {
           emit(MobileChatScreenError(error: e.toString()));

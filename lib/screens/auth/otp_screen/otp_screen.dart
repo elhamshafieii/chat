@@ -53,8 +53,6 @@ class _OTPScreenState extends State<OTPScreen> {
                         showSnackBar(context: context, content: state.error);
                       }
                     });
-
-                    bloc.add(OtpStarted());
                     return bloc;
                   },
                   child: BlocBuilder<OtpBloc, OtpState>(

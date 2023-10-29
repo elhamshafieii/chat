@@ -4,22 +4,22 @@ import 'package:chat/models/user_model.dart';
 import 'package:flutter/material.dart';
 
 class ContactProfilePhoto extends StatelessWidget {
-  final UserModel currentUserModelData;
+  final UserModel contactUserModel;
 
   const ContactProfilePhoto({
     super.key,
-    required this.currentUserModelData,
+    required this.contactUserModel,
   });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(currentUserModelData.name),
+        title: Text(contactUserModel.name),
         backgroundColor: DarkThemeColors.backgroundColor,
       ),
       backgroundColor: DarkThemeColors.backgroundColor,
       body: Center(
-        child: CachedNetworkImage(imageUrl: currentUserModelData.profilePic),
+        child: CachedNetworkImage(imageUrl: contactUserModel.profilePic),
       ),
     );
   }

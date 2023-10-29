@@ -16,6 +16,7 @@ class MyMessageCard extends StatelessWidget {
   final String username;
   final MessageEnum repliedMessageType;
   final bool isSeen;
+  final String replyTo;
 
   const MyMessageCard({
     Key? key,
@@ -27,6 +28,7 @@ class MyMessageCard extends StatelessWidget {
     required this.username,
     required this.repliedMessageType,
     required this.isSeen,
+    required this.replyTo,
   }) : super(key: key);
 
   @override
@@ -57,11 +59,14 @@ class MyMessageCard extends StatelessWidget {
                 children: [
                   if (isReplying) ...[
                     ReplyMessageContainer(
-                        repliedMessageType: repliedMessageType,
-                        type: type,
-                        username: username,
-                        repliedText: repliedText,
-                        themeData: themeData),
+                      repliedMessageType: repliedMessageType,
+                      type: type,
+                      username: username,
+                      repliedText: repliedText,
+                      themeData: themeData,
+                      replyTo: replyTo,
+                      isMeReply: true,
+                    ),
                   ],
                   const SizedBox(height: 4),
                   GestureDetector(

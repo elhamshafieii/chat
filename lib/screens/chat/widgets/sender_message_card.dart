@@ -18,6 +18,7 @@ class SenderMessageCard extends StatelessWidget {
     required this.repliedText,
     required this.username,
     required this.repliedMessageType,
+    required this.replyTo,
   }) : super(key: key);
   final String message;
   final String date;
@@ -26,6 +27,7 @@ class SenderMessageCard extends StatelessWidget {
   final String repliedText;
   final String username;
   final MessageEnum repliedMessageType;
+  final String replyTo;
 
   @override
   Widget build(BuildContext context) {
@@ -40,23 +42,25 @@ class SenderMessageCard extends StatelessWidget {
               maxWidth: MediaQuery.of(context).size.width - 45, minWidth: 110),
           child: ChatBubble(
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.fromLTRB(19, 1, 5, 0),
+            padding: const EdgeInsets.fromLTRB(19, 4, 4, 0),
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             backGroundColor: LightThemeColors.senderMessageColor.shade50,
             elevation: 5,
             clipper:
-                ChatBubbleClipper8(type: BubbleType.receiverBubble, radius: 12),
+                ChatBubbleClipper1(type: BubbleType.receiverBubble, radius: 12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (isReplying) ...[
                   ReplyMessageContainer(
-                      repliedMessageType: repliedMessageType,
-                      type: type,
-                      username: username,
-                      repliedText: repliedText,
-                      themeData: themeData),
+                    repliedMessageType: repliedMessageType,
+                    type: type,
+                    username: username,
+                    repliedText: repliedText,
+                    themeData: themeData,
+                    replyTo: replyTo, isMeReply: false,
+                  ),
                 ],
                 GestureDetector(
                   onTap: () {

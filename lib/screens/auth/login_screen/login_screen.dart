@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chat/common/utils/utils.dart';
 import 'package:chat/data/repository/auth_repository.dart';
 import 'package:chat/screens/auth/login_screen/bloc/auth_bloc.dart';
@@ -16,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late StreamSubscription<AuthState>? stateSubscription;
   final phoneController = TextEditingController();
   Country? country;
   void pickCountry() {
@@ -41,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    stateSubscription?.cancel();
     phoneController.dispose();
     super.dispose();
   }
@@ -49,14 +53,37 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: themeData.appBarTheme.backgroundColor,
           elevation: 0,
           title: const Text('Enter your phone Number'),
         ),
-        body: Padding(
+        body: BlocProvider<AuthBloc>(
+          create: (context) {
+            final bloc = AuthBloc(authRepository: authRepository);
+            stateSubscription = bloc.stream.listen((state) {
+              if (state is AuthSuccess) {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return UserInformationScreen();
+                }));
+              } else if (state is AuthGetVerificationId) {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return OTPScreen(
+                    verificationId: state.verificationId,
+                  );
+                }));
+              } else if (state is AuthError) {
+                showSnackBar(
+                    context: context, content: state.error.message.toString());
+              }
+            });
+            // bloc.add(AuthStarted());
+            return bloc;
+          },
+          child: Padding(
             padding: const EdgeInsets.all(18),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,59 +133,33 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 100,
                   ),
-                  BlocProvider<AuthBloc>(
-                    create: (context) {
-                      final bloc = AuthBloc(authRepository: authRepository);
-                      bloc.stream.forEach((state) {
-                        if (state is AuthSuccess) {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return UserInformationScreen();
-                          }));
-                        } else if (state is AuthGetVerificationId) {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return OTPScreen(
-                              // phoneNumber: '+${country!.phoneCode}$phoneNumber',
-                              verificationId: state.verificationId,
-                            );
-                          }));
-                        } else if (state is AuthError) {
-                          showSnackBar(
-                              context: context,
-                              content: 'An internal error has occurred.');
-                        }
-                      });
-                      bloc.add(AuthStarted());
-                      return bloc;
-                    },
-                    child: SizedBox(
-                        width: 90,
-                        child: BlocBuilder<AuthBloc, AuthState>(
-                          builder: (context, state) {
-                            return ElevatedButton(
-                                onPressed: () async {
-                                  String phoneNumber =
-                                      phoneController.text.trim();
-                                  if (country != null &&
-                                      phoneNumber.isNotEmpty) {
-                                    BlocProvider.of<AuthBloc>(context).add(
-                                        AuthNextButtomClicked(
-                                            phoneNumber:
-                                                '+${country!.phoneCode}$phoneNumber'));
-                                  } else {
-                                    showSnackBar(
-                                        context: context,
-                                        content: 'Fill out all the fields');
-                                  }
-                                },
-                                child: state is AuthLoading
-                                    ? const CupertinoActivityIndicator(
-                                        color: Colors.white)
-                                    : const Text('Next'));
-                          },
-                        )),
-                  )
-                ])));
+                  SizedBox(
+                      width: 90,
+                      child: BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          return ElevatedButton(
+                              onPressed: () async {
+                                String phoneNumber =
+                                    phoneController.text.trim();
+                                if (country != null && phoneNumber.isNotEmpty) {
+                                  context.read<AuthBloc>().add(
+                                      AuthNextButtomClicked(
+                                          phoneNumber:
+                                              '+${country!.phoneCode}$phoneNumber'));
+                                } else {
+                                  showSnackBar(
+                                      context: context,
+                                      content: 'Fill out all the fields');
+                                }
+                              },
+                              child: state is AuthLoading
+                                  ? const CupertinoActivityIndicator(
+                                      color: Colors.white)
+                                  : const Text('Next'));
+                        },
+                      )),
+                ]),
+          ),
+        ));
   }
 }

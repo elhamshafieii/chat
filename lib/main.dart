@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chat/common/utils/theme.dart';
 import 'package:chat/common/utils/utils.dart';
 import 'package:chat/data/repository/auth_repository.dart';
@@ -9,8 +7,6 @@ import 'package:chat/screens/mobile_layout/bloc/mobile_layout_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
 Future<void> main() async {
@@ -35,35 +31,35 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  createFolder() async {
-    final permissionStatus = await Permission.manageExternalStorage.request();
-    final dir = await getExternalStorageDirectory();
-    final dirPath = dir!.path;
-    if (permissionStatus.isGranted) {
-      final imagPath = Directory('$dirPath/images');
-      final videoPath = Directory('$dirPath/videos');
-      final audioPath = Directory('$dirPath/audioa');
-      final filePath = Directory('$dirPath/files');
-      if (!(await imagPath.exists())) {
-        imagPath.create();
-      }
-      if (!(await videoPath.exists())) {
-        videoPath.create();
-      }
-      if (!(await audioPath.exists())) {
-        audioPath.create();
-      }
-      if (!(await filePath.exists())) {
-        filePath.create();
-      }
-    } else {
-      showSnackBar(context: context, content: 'Storage Permission Denies.');
-    }
-  }
+  // createFolder() async {
+  //   final permissionStatus = await Permission.manageExternalStorage.request();
+  //   final dir = await getExternalStorageDirectory();
+  //   final dirPath = dir!.path;
+  //   if (permissionStatus.isGranted) {
+  //     final imagPath = Directory('$dirPath/images');
+  //     final videoPath = Directory('$dirPath/videos');
+  //     final audioPath = Directory('$dirPath/audioa');
+  //     final filePath = Directory('$dirPath/files');
+  //     if (!(await imagPath.exists())) {
+  //       imagPath.create();
+  //     }
+  //     if (!(await videoPath.exists())) {
+  //       videoPath.create();
+  //     }
+  //     if (!(await audioPath.exists())) {
+  //       audioPath.create();
+  //     }
+  //     if (!(await filePath.exists())) {
+  //       filePath.create();
+  //     }
+  //   } else {
+  //     showSnackBar(context: context, content: 'Storage Permission Denies.');
+  //   }
+  // }
 
   @override
   void initState() {
-    createFolder();
+    // createFolder();
     super.initState();
   }
 

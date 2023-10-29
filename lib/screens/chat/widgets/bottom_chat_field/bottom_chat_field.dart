@@ -110,7 +110,7 @@ class _ButtomChatFieldState extends State<ButtomChatField> {
     }
     if (isRecording) {
       await _soundRecorder!.stopRecorder();
-      File file = File(path);
+      // File file = File(path);
       chatRepository.sendMessage(
           message: path,
           contactUid: widget.contactUid,

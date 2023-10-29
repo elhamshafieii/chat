@@ -13,8 +13,9 @@ class ChatListError extends ChatListState {
 
 class ChatListSuccess extends ChatListState {
   final Stream<List<Message>> messages;
+  final UserModel contactUserModel;
 
-  ChatListSuccess({
+  ChatListSuccess({required this.contactUserModel,
     required this.messages,
   });
 }

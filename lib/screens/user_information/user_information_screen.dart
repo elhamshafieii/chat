@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,12 +17,14 @@ class UserInformationScreen extends StatefulWidget {
 }
 
 class _UserInformationScreenState extends State<UserInformationScreen> {
+  late StreamSubscription<UserInformationState>? stateSubscription;
   ThemeData? themeData;
   File? image;
   final TextEditingController nameController = TextEditingController();
 
   @override
   void dispose() {
+    stateSubscription?.cancel();
     nameController.dispose();
     super.dispose();
   }
@@ -49,7 +52,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                     ? CircleAvatar(
                         radius: 64,
                         backgroundImage: CachedNetworkImageProvider(
-                            "gs://chat-3a33d.appspot.com/profilePic/no_profile_pic.png"))
+                            'https://firebasestorage.googleapis.com/v0/b/chat-3a33d.appspot.com/o/profilePic%2Fno_profile_pic.png?alt=media&token=68deedfe-0c8e-4641-9d6d-506c8b656a57&_gl=1*1burinx*_ga*MjAwMzcxNTMzNS4xNjkxOTgxMDA2*_ga_CW55HF8NVT*MTY5NzYwODAwOC4xMTcuMS4xNjk3NjA5NTYyLjU2LjAuMA..'))
                     : CircleAvatar(
                         radius: 64,
                         backgroundImage: FileImage(image!),
@@ -81,7 +84,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                     final bloc = UserInformationBloc(
                       authRepository: authRepository,
                     );
-                    bloc.stream.forEach((state) {
+                    stateSubscription = bloc.stream.listen((state) {
                       if (state is UserInformationError) {
                         showSnackBar(context: context, content: state.error);
                       } else if (state is UserInformationLoading) {
